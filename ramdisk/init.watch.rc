@@ -218,6 +218,15 @@ service delay_sleep /system/bin/pcba_test --sleep
     disabled
     oneshot
 
+service amazboost /system/bin/sh /sbin/script/amazboost.sh
+    class late_start
+    user root
+    group root
+    disabled
+    oneshot
+on property:sys.boot_completed=1
+    start amazboost
+
 on property:ro.factorytest=1
 	start hardware_adapter
 
