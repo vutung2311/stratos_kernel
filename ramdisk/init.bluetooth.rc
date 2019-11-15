@@ -1,0 +1,13 @@
+on init
+   # permissions for bluetooth.
+    setprop ro.bt.bdaddr_path "/data/misc/bluetooth/bt_addr"
+    chown bluetooth bluetooth ro.bt.bdaddr_path
+    chown bluetooth bluetooth /dev/ttyS0
+    # bluetooth use UART0
+    chmod 0600 /dev/ttyS0
+    # nfc use UART1
+    chmod 0777 /dev/ttyS1
+    chmod 0660 /sys/class/rfkill/rfkill0/stat
+    write /sys/class/rfkill/rfkill0/state 0
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type

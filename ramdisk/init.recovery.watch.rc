@@ -1,0 +1,70 @@
+on early-init
+        start ueventd
+
+# create mountpoints
+        mkdir /mnt 0775 root system
+        mkdir /mnt/flash 0400 system system
+        mkdir /mnt/sdcard 0777 root root
+        mkdir /sdcard
+        mkdir /flash
+        mkdir /system
+        mkdir /system/bin
+        mkdir /data
+on init
+        export PATH /sbin:/system/bin:/sbin/pretest:
+        export ANDROID_ROOT /system
+        export ANDROID_DATA /data
+        export EXTERNAL_STORAGE /sdcard
+        export SECONDARY_STORAGE /flash
+
+        symlink /system/etc /etc
+        symlink /mnt/flash /flash
+        symlink /mnt/sdcard /sdcard
+        symlink /sbin/sh_s  /system/bin/sh
+        symlink /sbin/toolbox_s /sbin/toolbox
+        symlink /sbin/toolbox /sbin/ls
+        symlink /sbin/toolbox /sbin/ln
+        symlink /sbin/toolbox /sbin/mv
+        symlink /sbin/toolbox /sbin/rm
+        symlink /sbin/toolbox /sbin/ps
+        symlink /sbin/toolbox /sbin/chmod
+        symlink /sbin/toolbox /sbin/chown
+        symlink /sbin/toolbox /sbin/kill
+        symlink /sbin/toolbox /sbin/mkdir
+        symlink /sbin/toolbox /sbin/rmdir
+        symlink /sbin/toolbox /sbin/mount
+        symlink /sbin/toolbox /sbin/umount
+        symlink /sbin/toolbox /sbin/which
+        symlink /sbin/toolbox /sbin/getevent
+        symlink /sbin/toolbox /sbin/sendevent
+        symlink /sbin/toolbox /sbin/reboot
+        symlink /sbin/toolbox /sbin/grep
+        symlink /sbin/toolbox /sbin/cp
+
+        mount /tmp /tmp tmpfs
+
+on fs
+    mount_all /fstab.watch
+
+on boot
+
+        ifup lo
+        hostname localhost
+        domainname localdomain
+
+        class_start default
+
+service ueventd /sbin/ueventd
+        critical
+
+        class_start default
+service console /sbin/sh_s
+        class core
+        console
+        disabled
+        user root
+        group log
+
+on property:ro.debuggable=1
+    start console
+
