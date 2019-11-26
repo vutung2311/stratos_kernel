@@ -416,8 +416,6 @@ on boot
     setprop net.tcp.default_init_rwnd 60
 
 on android-boot
-    start sysinit
-
     class_start core
 
 on adb-only-init
